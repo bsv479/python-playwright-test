@@ -4,7 +4,8 @@ from playwright.sync_api import Page, expect, Playwright
 
 from objects.register_creds import RegisterCreds
 from pages.register_page import RegisterPage
-from utils.register_creds_utils import save_register_creds, read_register_creds, get_random_register_creds
+from utils.register_creds_utils import save_register_creds, read_register_creds, get_random_register_creds, \
+    REGISTER_CREDS_JSON
 
 
 @pytest.fixture(scope="session")
@@ -15,7 +16,7 @@ def registration_creds():
 
 
 @pytest.fixture(scope="session")
-def sign_up_setup(playwright: Playwright, register_url, storage_state_path, registration_creds):
+def sign_up_setup(playwright: Playwright, register_url, registration_creds):
     browser = playwright.chromium.launch()
     context = browser.new_context(base_url=register_url)
     page: Page = context.new_page()
@@ -29,13 +30,13 @@ def sign_up_setup(playwright: Playwright, register_url, storage_state_path, regi
         register_page.submit_registration_form()
         expect(page.locator("#customer_menu_top")).to_contain_text(f"Welcome back {registration_creds.first_name}")
 
-    context.storage_state(path=storage_state_path)
+    context.storage_state(path=REGISTER_CREDS_JSON)
     browser.close()
 
 
 @pytest.fixture()
-def login_set_up(sign_up_setup, browser, storage_state_path, base_url):
-    context = browser.new_context(storage_state=storage_state_path)
+def login_set_up(sign_up_setup, browser, base_url):
+    context = browser.new_context(storage_state=REGISTER_CREDS_JSON)
     page = context.new_page()
     page.goto(base_url)
     yield page

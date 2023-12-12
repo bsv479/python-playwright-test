@@ -41,11 +41,6 @@ def faker_seed():
 
 
 @pytest.fixture(scope="session")
-def storage_state_path() -> str:
-    return 'tests/e2e/playwright/.auth/register_creds.json'
-
-
-@pytest.fixture(scope="session")
 def base_url(current_env) -> str:
     return read_config(current_env, "BASE_URL")
 

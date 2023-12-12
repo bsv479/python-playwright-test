@@ -155,4 +155,3 @@ cython_debug/
 # PyCharm
 .idea/
 allure-results
-tests/test_ui/playwright/.auth
